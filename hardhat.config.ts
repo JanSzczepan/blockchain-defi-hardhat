@@ -15,7 +15,9 @@ const config: HardhatUserConfig = {
          },
       },
    },
-   solidity: '0.8.18',
+   solidity: {
+      compilers: [{ version: '0.8.18' }, { version: '0.6.12' }],
+   },
    namedAccounts: {
       deployer: {
          default: 0,

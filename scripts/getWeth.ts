@@ -1,8 +1,9 @@
 import { ethers, getNamedAccounts, network } from 'hardhat'
-import { WETH_AMOUNT, networkConfig } from '../helper-hardhat-config'
+import { networkConfig } from '../helper-hardhat-config'
 import { IWeth } from '../typechain-types'
+import formatUnits from '../utils/formatUnits'
 
-export async function getWeth() {
+export async function getWeth(amount: string) {
    console.log('Getting WETH...')
    const { deployer } = await getNamedAccounts()
    const iWeth: IWeth = await ethers.getContractAt(
@@ -11,14 +12,9 @@ export async function getWeth() {
       deployer
    )
 
-   const tx = await iWeth.deposit({ value: WETH_AMOUNT })
+   const tx = await iWeth.deposit({ value: amount })
    await tx.wait(1)
 
    const wethBalance = await iWeth.balanceOf(deployer)
-   console.log(
-      `Got ${ethers.utils.formatUnits(
-         wethBalance.mul(1000000).div(String(10 ** 18)),
-         6
-      )} WETH`
-   )
+   console.log(`Got ${formatUnits(wethBalance, 6)} WETH`)
 }
